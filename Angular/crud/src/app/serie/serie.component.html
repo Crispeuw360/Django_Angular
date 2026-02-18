@@ -1,0 +1,15 @@
+<div class="container">
+  <h2>Series</h2>
+  
+  <div class="serie-grid">
+    <div class="serie-card" *ngFor="let serie of series" [routerLink]="['/serie', serie.id]">
+      <img [src]="serie.image" alt="{{ serie.title }}" *ngIf="serie.image">
+      <div class="serie-info">
+        <h3>{{ serie.title }} ({{ serie.year }})</h3>
+        <p>{{ serie.desc }}</p>
+        <p><strong>Temporadas:</strong> {{ serie.seasons }}</p>
+        <p><strong>Capítulos:</strong> {{ serie.episodes }}</p>
+      </div>
+    </div>
+  </div>
+</div>

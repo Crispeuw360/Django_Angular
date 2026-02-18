@@ -1,0 +1,53 @@
+<div class="search-container">
+  <div class="search-box">
+    <input 
+      type="text" 
+      [(ngModel)]="searchQuery" 
+      (input)="onSearchInput()"
+      placeholder="Search movies and series..."
+      class="search-input"
+    />
+    <span class="search-icon">🔍</span>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Searching...</p>
+  </div>
+
+  <div *ngIf="hasSearched && !loading" class="results">
+    <div *ngIf="movies.length === 0 && series.length === 0" class="no-results">
+      <p>No results found for "{{ searchQuery }}"</p>
+    </div>
+
+    <div *ngIf="movies.length > 0" class="results-section">
+      <h2>Movies</h2>
+      <div class="results-grid">
+        <div *ngFor="let movie of movies" 
+             class="result-card"
+             [routerLink]="['/movie', movie.id]">
+          <img [src]="movie.image" [alt]="movie.title" class="result-image">
+          <div class="result-info">
+            <h3>{{ movie.title }}</h3>
+            <p class="year">{{ movie.year }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="series.length > 0" class="results-section">
+      <h2>Series</h2>
+      <div class="results-grid">
+        <div *ngFor="let serie of series" 
+             class="result-card"
+             [routerLink]="['/serie', serie.id]">
+          <img [src]="serie.image" [alt]="serie.title" class="result-image">
+          <div class="result-info">
+            <h3>{{ serie.title }}</h3>
+            <p class="year">{{ serie.year }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,94 @@
+<div *ngIf="loading" class="loading-container">
+  <div class="spinner"></div>
+  <p>Loading...</p>
+</div>
+
+<div *ngIf="error" class="error-container">
+  <p>{{ error }}</p>
+</div>
+
+<!-- Video Player Modal -->
+<app-video-player 
+  *ngIf="showVideoPlayer"
+  [src]="videoSrc"
+  [poster]="item?.image || ''"
+  [title]="videoTitle"
+  [subtitle]="videoSubtitle"
+  [episodes]="getEpisodesForPlayer()"
+  [currentEpisodeIndex]="selectedEpisodeIndex"
+  [nextVideoAvailable]="hasNextEpisode()"
+  [totalSeasons]="item && isSerie(item) ? item.seasons : 1"
+  (close)="closeVideoPlayer()"
+  (next)="onNextEpisode()"
+  (selectEpisode)="onSelectEpisodeFromPlayer($event)">
+</app-video-player>
+
+<div *ngIf="item" class="detail-page">
+  <!-- Hero Section with Background Image -->
+  <div class="hero" [style.backgroundImage]="'url(' + item.image + ')'">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="poster-wrapper">
+        <img [src]="item.image" [alt]="item.title" class="poster">
+      </div>
+      <div class="info">
+        <h1>{{ item.title }}</h1>
+        <div class="meta">
+          <span class="year">{{ item.year }}</span>
+          <span *ngIf="isSerie(item)" class="badge">{{ item.seasons }} Seasons</span>
+          <span *ngIf="isSerie(item)" class="badge">{{ item.episodes }} Episodes</span>
+        </div>
+        <p class="desc">{{ item.desc }}</p>
+        
+        <!-- Play Button for Movies -->
+        <button *ngIf="!isSerie(item) && item.video" class="play-btn" (click)="openVideoPlayer()">
+          <span class="play-icon">▶</span><span>Play</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="media-section" id="video-section">
+    <!-- Episodes List -->
+    <div *ngIf="isSerie(item)" class="episodes-container">
+      <h2>Episodes</h2>
+      <div class="seasons-list">
+        <div *ngFor="let season of getSeasonsArray(item)" class="season-block">
+          <h3 class="season-title">Season {{ season }}</h3>
+          <div class="episodes-grid">
+            <div *ngFor="let episode of getEpisodesForSeason(item, season)" 
+                 class="episode-card"
+                 [class.active]="selectedEpisode === episode"
+                 (click)="selectEpisode(episode); openVideoPlayer()"
+                 (mouseenter)="onEpisodeHover(episode)"
+                 (mouseleave)="onEpisodeLeave()">
+              <div class="episode-thumbnail">
+                <video *ngIf="episode.video" 
+                       [src]="episode.video" 
+                       class="preview-video"
+                       muted
+                       loop
+                       #previewVideo></video>
+                <img *ngIf="!episode.video && item.image" 
+                     [src]="item.image" 
+                     class="preview-image"
+                     [alt]="episode.title">
+                <div class="play-overlay">
+                  <div class="play-icon">▶</div>
+                </div>
+              </div>
+              <div class="episode-info">
+                <span class="episode-number">E{{ episode.episode_number }}</span>
+                <span class="episode-title">{{ episode.title }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!item.video && !isSerie(item)" class="no-video">
+      <p>No video available for this movie.</p>
+    </div>
+  </div>
+</div>

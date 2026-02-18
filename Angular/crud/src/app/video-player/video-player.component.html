@@ -1,0 +1,157 @@
+<div class="video-player-container" 
+     (mousemove)="onMouseMove()" 
+     (mouseleave)="onMouseLeave()"
+     [class.controls-visible]="showControls">
+  
+  <!-- Video Element -->
+  <video #videoElement
+         [src]="src"
+         [poster]="poster"
+         class="video-element"
+         (click)="togglePlay()">
+  </video>
+
+  <!-- Gradient Overlays -->
+  <div class="gradient-top"></div>
+  <div class="gradient-bottom"></div>
+
+  <!-- Episode List Sidebar -->
+  <div class="episode-sidebar" [class.visible]="showEpisodeList">
+    <div class="sidebar-header">
+      <h3>Episodios</h3>
+      <button class="close-sidebar-btn" (click)="showEpisodeList = false">
+        <span class="icon">close</span>
+      </button>
+    </div>
+    
+    <!-- Season Tabs Section -->
+    <div class="season-tabs" *ngIf="totalSeasons > 1">
+      <div class="season-tabs-header">Temporadas</div>
+      <div class="season-tabs-list">
+        <button class="season-tab" 
+                *ngFor="let season of seasonsArray"
+                [class.active]="season === selectedSeason"
+                (click)="selectSeason(season)">
+          {{ season }}
+        </button>
+      </div>
+    </div>
+    
+    <!-- Episode List Section -->
+    <div class="episode-list-header">
+      <h4>Temporada {{ selectedSeason }}</h4>
+      <div class="episode-count">{{ episodesForSelectedSeason.length }} episodios</div>
+    </div>
+    
+    <div class="episode-list">
+      <div class="episode-item" 
+           *ngFor="let episode of episodesForSelectedSeason; let i = index"
+           [class.active]="episodes.indexOf(episode) === currentEpisodeIndex"
+           (click)="onSelectEpisode(episodes.indexOf(episode))">
+        <div class="episode-number">{{ episode.episode_number }}</div>
+        <div class="episode-info">
+          <span class="episode-title">{{ episode.title }}</span>
+          <span class="episode-season">Episodio {{ episode.episode_number }}</span>
+        </div>
+        <span class="play-icon" *ngIf="episodes.indexOf(episode) === currentEpisodeIndex">
+          <span class="icon">play_arrow</span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls Overlay -->
+  <div class="controls-overlay" [class.visible]="showControls">
+    
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <button class="back-btn" (click)="onClose()">
+        <span class="icon">arrow_back</span>
+      </button>
+      <div class="title-info">
+        <h1 class="video-title">{{ title }}</h1>
+        <p class="video-subtitle" *ngIf="subtitle">{{ subtitle }}</p>
+      </div>
+    </div>
+
+    <!-- Center Play Button -->
+    <div class="center-controls" *ngIf="!isPlaying" (click)="togglePlay()">
+      <button class="big-play-btn">
+        <span class="icon">play_arrow</span>
+      </button>
+    </div>
+
+    <!-- Bottom Controls -->
+    <div class="bottom-controls">
+      
+      <!-- Progress Bar -->
+      <div class="progress-container" #progressBar (click)="onProgressClick($event)">
+        <div class="progress-bar">
+          <div class="progress-buffered" [style.width.%]="100"></div>
+          <div class="progress-played" [style.width.%]="getProgress()"></div>
+          <div class="progress-thumb" [style.left.%]="getProgress()"></div>
+        </div>
+      </div>
+
+      <!-- Control Buttons -->
+      <div class="control-buttons">
+        <div class="left-controls">
+          <!-- Play/Pause -->
+          <button class="control-btn" (click)="togglePlay()">
+            <span class="icon">{{ isPlaying ? 'pause' : 'play_arrow' }}</span>
+          </button>
+
+          <!-- Skip Backward -->
+          <button class="control-btn" (click)="seek(-10)">
+            <span class="icon">replay_10</span>
+          </button>
+
+          <!-- Skip Forward -->
+          <button class="control-btn" (click)="seek(10)">
+            <span class="icon">forward_10</span>
+          </button>
+
+          <!-- Volume -->
+          <div class="volume-container" 
+               (mouseenter)="showVolumeSlider = true"
+               (mouseleave)="showVolumeSlider = false">
+            <button class="control-btn" (click)="toggleMute()">
+              <span class="icon">{{ isMuted || volume === 0 ? 'volume_off' : volume < 0.5 ? 'volume_down' : 'volume_up' }}</span>
+            </button>
+            <div class="volume-slider" [class.visible]="showVolumeSlider">
+              <input type="range" 
+                     min="0" 
+                     max="1" 
+                     step="0.1" 
+                     [value]="volume"
+                     (input)="onVolumeChange($event)"
+                     class="volume-input">
+            </div>
+          </div>
+
+          <!-- Time Display -->
+          <span class="time-display">
+            {{ formatTime(currentTime) }} / {{ formatTime(duration) }}
+          </span>
+        </div>
+
+        <div class="right-controls">
+          <!-- Episode List Button -->
+          <button class="control-btn" (click)="toggleEpisodeList()" *ngIf="episodes.length > 0" [class.active]="showEpisodeList">
+            <span class="icon">list</span>
+          </button>
+
+          <!-- Next Episode Button -->
+          <button class="control-btn" (click)="onNext()" *ngIf="nextVideoAvailable" title="Siguiente episodio">
+            <span class="icon">skip_next</span>
+          </button>
+
+          <!-- Fullscreen -->
+          <button class="control-btn" (click)="toggleFullscreen()">
+            <span class="icon">{{ isFullscreen ? 'fullscreen_exit' : 'fullscreen' }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
