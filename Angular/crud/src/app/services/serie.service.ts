@@ -18,8 +18,16 @@ export class SerieService {
     return this.http.get<Serie>(`${this.apiUrl}${id}/`);
   }
 
-  searchSeries(query: string): Observable<Serie[]> {
-    return this.http.get<Serie[]>(`${this.apiUrl}?search=${encodeURIComponent(query)}`);
+  searchSeries(query: string, genre?: string): Observable<Serie[]> {
+    let params = `search=${encodeURIComponent(query)}`;
+    if (genre && genre !== 'all') {
+      params += `&genre=${encodeURIComponent(genre)}`;
+    }
+    return this.http.get<Serie[]>(`${this.apiUrl}?${params}`);
+  }
+
+  getSeriesByGenre(genre: string): Observable<Serie[]> {
+    return this.http.get<Serie[]>(`${this.apiUrl}?genre=${encodeURIComponent(genre)}`);
   }
 
   createSerie(serie: Serie): Observable<Serie> {

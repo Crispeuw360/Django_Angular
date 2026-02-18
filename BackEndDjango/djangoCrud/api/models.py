@@ -1,5 +1,21 @@
 from django.db import models
 
+# Genre choices for movies and series
+GENRE_CHOICES = [
+    ('action', 'Action'),
+    ('comedy', 'Comedy'),
+    ('drama', 'Drama'),
+    ('horror', 'Horror'),
+    ('sci-fi', 'Sci-Fi'),
+    ('thriller', 'Thriller'),
+    ('romance', 'Romance'),
+    ('animation', 'Animation'),
+    ('documentary', 'Documentary'),
+    ('adventure', 'Adventure'),
+    ('fantasy', 'Fantasy'),
+    ('mystery', 'Mystery'),
+]
+
 # Create your models here.
 class Movie(models.Model):
     title = models.CharField(max_length=32)
@@ -7,6 +23,7 @@ class Movie(models.Model):
     year = models.IntegerField()
     image = models.ImageField(upload_to='movies/', null=True, blank=True)
     video = models.FileField(upload_to='videos/', null=True, blank=True)
+    genre = models.CharField(max_length=32, choices=GENRE_CHOICES, default='drama')
 
 class Serie(models.Model):
     title = models.CharField(max_length=32)
@@ -16,6 +33,7 @@ class Serie(models.Model):
     video = models.FileField(upload_to='videos/', null=True, blank=True)
     seasons = models.IntegerField()
     episodes = models.IntegerField()
+    genre = models.CharField(max_length=32, choices=GENRE_CHOICES, default='drama')
 
 class Episode(models.Model):
     title = models.CharField(max_length=64)

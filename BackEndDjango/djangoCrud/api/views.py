@@ -17,10 +17,13 @@ class MovieViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = super().get_queryset()
         search = self.request.query_params.get('search', None)
+        genre = self.request.query_params.get('genre', None)
         if search:
             queryset = queryset.filter(
                 Q(title__icontains=search) | Q(desc__icontains=search)
             )
+        if genre:
+            queryset = queryset.filter(genre=genre)
         return queryset
 
 class SerieViewSet(viewsets.ModelViewSet):
@@ -35,8 +38,11 @@ class SerieViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = super().get_queryset()
         search = self.request.query_params.get('search', None)
+        genre = self.request.query_params.get('genre', None)
         if search:
             queryset = queryset.filter(
                 Q(title__icontains=search) | Q(desc__icontains=search)
             )
+        if genre:
+            queryset = queryset.filter(genre=genre)
         return queryset

@@ -32,9 +32,10 @@
         <img [src]="item.image" [alt]="item.title" class="poster">
       </div>
       <div class="info">
-        <h1>{{ item.title }}</h1>
+        <h1 class="title-hover">{{ item.title }}</h1>
         <div class="meta">
           <span class="year">{{ item.year }}</span>
+          <span *ngIf="item.genre" class="genre-badge">{{ item.genre }}</span>
           <span *ngIf="isSerie(item)" class="badge">{{ item.seasons }} Seasons</span>
           <span *ngIf="isSerie(item)" class="badge">{{ item.episodes }} Episodes</span>
         </div>

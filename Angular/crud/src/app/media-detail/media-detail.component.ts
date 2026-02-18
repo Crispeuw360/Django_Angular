@@ -63,7 +63,6 @@ export class MediaDetailComponent implements OnInit {
         } else {
           this.serieService.getSerie(id).subscribe({
             next: (serie) => {
-              console.log('Serie loaded:', serie);
               this.item = serie;
               if (serie.episode_list && serie.episode_list.length > 0) {
                  // Optionally select the first episode

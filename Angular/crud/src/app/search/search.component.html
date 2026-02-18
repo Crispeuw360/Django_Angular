@@ -2,26 +2,31 @@
   <div class="search-box">
     <input 
       type="text" 
-      [(ngModel)]="searchQuery" 
-      (input)="onSearchInput()"
+      [ngModel]="searchQuery" 
+      (ngModelChange)="onSearchChange($event)"
       placeholder="Search movies and series..."
       class="search-input"
     />
+    <select [ngModel]="selectedGenre" (ngModelChange)="onGenreChange($event)" class="genre-select">
+      <option *ngFor="let genre of genres" [value]="genre.value">{{ genre.label }}</option>
+    </select>
     <span class="search-icon">🔍</span>
   </div>
 
   <div *ngIf="loading" class="loading">
     <div class="spinner"></div>
-    <p>Searching...</p>
+    <p>Loading...</p>
   </div>
 
-  <div *ngIf="hasSearched && !loading" class="results">
+  <div *ngIf="!loading" class="results">
     <div *ngIf="movies.length === 0 && series.length === 0" class="no-results">
-      <p>No results found for "{{ searchQuery }}"</p>
+      <p *ngIf="searchQuery">No results found for "{{ searchQuery }}"</p>
+      <p *ngIf="!searchQuery && selectedGenre !== 'all'">No results found for genre "{{ getGenreLabel(selectedGenre) }}"</p>
+      <p *ngIf="!searchQuery && selectedGenre === 'all'">No content available</p>
     </div>
 
     <div *ngIf="movies.length > 0" class="results-section">
-      <h2>Movies</h2>
+      <h2>Movies <span *ngIf="selectedGenre !== 'all'" class="filter-info">- {{ getGenreLabel(selectedGenre) }}</span></h2>
       <div class="results-grid">
         <div *ngFor="let movie of movies" 
              class="result-card"
@@ -30,13 +35,14 @@
           <div class="result-info">
             <h3>{{ movie.title }}</h3>
             <p class="year">{{ movie.year }}</p>
+            <p *ngIf="movie.genre" class="genre-tag">{{ getGenreLabel(movie.genre) }}</p>
           </div>
         </div>
       </div>
     </div>
 
     <div *ngIf="series.length > 0" class="results-section">
-      <h2>Series</h2>
+      <h2>Series <span *ngIf="selectedGenre !== 'all'" class="filter-info">- {{ getGenreLabel(selectedGenre) }}</span></h2>
       <div class="results-grid">
         <div *ngFor="let serie of series" 
              class="result-card"
@@ -45,6 +51,7 @@
           <div class="result-info">
             <h3>{{ serie.title }}</h3>
             <p class="year">{{ serie.year }}</p>
+            <p *ngIf="serie.genre" class="genre-tag">{{ getGenreLabel(serie.genre) }}</p>
           </div>
         </div>
       </div>

@@ -16,4 +16,5 @@ export interface Serie {
   seasons: number;
   episodes: number;
   episode_list?: Episode[];
+  genre?: string;
 }

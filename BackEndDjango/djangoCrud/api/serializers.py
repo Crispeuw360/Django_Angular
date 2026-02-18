@@ -6,7 +6,7 @@ from djangoCrud.api.models import Movie, Serie, Episode
 class MovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
-        fields = ["id","title", "desc", "year", "image", "video"]
+        fields = ["id","title", "desc", "year", "image", "video", "genre"]
 
 class EpisodeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,4 +17,4 @@ class SerieSerializer(serializers.ModelSerializer):
     episode_list = EpisodeSerializer(many=True, read_only=True)
     class Meta:
         model = Serie
-        fields = ["id","title", "desc", "year", "image", "video", "seasons", "episodes", "episode_list"]
+        fields = ["id","title", "desc", "year", "image", "video", "seasons", "episodes", "episode_list", "genre"]

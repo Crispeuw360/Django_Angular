@@ -18,8 +18,16 @@ export class MovieService {
     return this.http.get<Movie>(`${this.apiUrl}${id}/`);
   }
 
-  searchMovies(query: string): Observable<Movie[]> {
-    return this.http.get<Movie[]>(`${this.apiUrl}?search=${encodeURIComponent(query)}`);
+  searchMovies(query: string, genre?: string): Observable<Movie[]> {
+    let params = `search=${encodeURIComponent(query)}`;
+    if (genre && genre !== 'all') {
+      params += `&genre=${encodeURIComponent(genre)}`;
+    }
+    return this.http.get<Movie[]>(`${this.apiUrl}?${params}`);
+  }
+
+  getMoviesByGenre(genre: string): Observable<Movie[]> {
+    return this.http.get<Movie[]>(`${this.apiUrl}?genre=${encodeURIComponent(genre)}`);
   }
 
   createMovie(movie: Movie): Observable<Movie> {
