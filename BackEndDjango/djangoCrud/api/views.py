@@ -26,9 +26,11 @@ class MovieViewSet(viewsets.ModelViewSet):
 
         if genre and genre != 'all':
             queryset = queryset.filter(genre=genre)
-            
-        # Limitamos resultados para que la respuesta sea instantánea (opcional)
-        return queryset[:20] 
+        
+        # Solo limitar resultados en listas, no en detalle
+        if self.action == 'list':
+            return queryset[:20]
+        return queryset 
 
 class SerieViewSet(viewsets.ModelViewSet):
     queryset = Serie.objects.all()
@@ -49,4 +51,7 @@ class SerieViewSet(viewsets.ModelViewSet):
         if genre and genre != 'all':
             queryset = queryset.filter(genre=genre)
 
-        return queryset[:20]
+        # Solo limitar resultados en listas, no en detalle
+        if self.action == 'list':
+            return queryset[:20]
+        return queryset
