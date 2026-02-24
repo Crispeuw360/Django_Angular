@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 ARG PYTHON_VERSION=3.12
-FROM python:${PYTHON_VERSION}-slim as base
+FROM python:${PYTHON_VERSION}-slim AS base
 
 # Evita que Python genere archivos .pyc y permite ver logs en tiempo real
 ENV PYTHONDONTWRITEBYTECODE=1
