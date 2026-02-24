@@ -18,7 +18,10 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Serve the application with nginx
-FROM nginx:alpine
+FROM nginx:alpine-slim
+
+# Upgrade packages to fix vulnerabilities
+RUN apk upgrade --no-cache
 
 # Copy custom nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf

@@ -1,12 +1,19 @@
 # syntax=docker/dockerfile:1
 ARG PYTHON_VERSION=3.12
-FROM python:${PYTHON_VERSION}-slim AS base
+FROM python:${PYTHON_VERSION}-alpine AS base
 
 # Evita que Python genere archivos .pyc y permite ver logs en tiempo real
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
+
+# Install build dependencies for Pillow and other packages
+RUN apk add --no-cache \
+    build-base \
+    libjpeg-turbo-dev \
+    zlib-dev \
+    libpng-dev
 
 # 1. Crear el usuario 'appuser' (sin privilegios de root)
 ARG UID=10001
