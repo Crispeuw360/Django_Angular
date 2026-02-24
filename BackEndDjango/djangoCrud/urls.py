@@ -19,5 +19,17 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include(router.urls)),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+# Serve media files in both development and production
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+else:
+    # In production, serve media files using django's serve view
+    from django.views.static import serve
+    urlpatterns += [
+        path(f'{settings.MEDIA_URL.lstrip("/")}<path:path>', serve, {
+            'document_root': settings.MEDIA_ROOT,
+        }),
+    ]
 
