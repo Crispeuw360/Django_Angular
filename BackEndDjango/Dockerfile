@@ -38,14 +38,17 @@ COPY --chown=appuser:appuser . .
 
 RUN chown appuser:appuser /app
 
-# 4. Collect static files
+# 4. Run migrations
+RUN python manage.py migrate --noinput
+
+# 5. Collect static files
 RUN python manage.py collectstatic --noinput
 
-# 5. Cambiar al usuario limitado por seguridad
+# 6. Cambiar al usuario limitado por seguridad
 USER appuser
 
 # Exponer el puerto
 EXPOSE 8000
 
-# 5. Comando de arranque (usando formato de lista para mejor estabilidad)
+# 7. Comando de arranque (usando formato de lista para mejor estabilidad)
 CMD ["gunicorn", "djangoCrud.wsgi", "--bind", "0.0.0.0:8000"]

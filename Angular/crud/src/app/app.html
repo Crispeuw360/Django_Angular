@@ -1,6 +1,18 @@
-<nav>
-  <a routerLink="/movies" routerLinkActive="active">Películas</a>
-  <a routerLink="/series" routerLinkActive="active">Series</a>
-  <a routerLink="/search" routerLinkActive="active" class="search-link">🔍 Buscar</a>
-</nav>
+@if (authService.isAuthenticated()) {
+  <nav>
+    <div class="nav-links">
+      <a routerLink="/movies" routerLinkActive="active">Películas</a>
+      <a routerLink="/series" routerLinkActive="active">Series</a>
+      <a routerLink="/search" routerLinkActive="active" class="search-link">🔍 Buscar</a>
+    </div>
+    <div class="auth-section">
+      <span class="user-info">
+        @if (authService.currentUser(); as user) {
+          👤 {{ user.username }}
+        }
+      </span>
+      <button (click)="authService.logout()" class="btn-logout">Cerrar Sesión</button>
+    </div>
+  </nav>
+}
 <router-outlet />

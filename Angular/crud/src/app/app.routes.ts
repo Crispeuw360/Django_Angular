@@ -3,12 +3,15 @@ import { MovieComponent } from './movie/movie.component';
 import { SerieComponent } from './serie/serie.component';
 import { MediaDetailComponent } from './media-detail/media-detail.component';
 import { SearchComponent } from './search/search.component';
+import { LoginComponent } from './auth/login.component';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-    { path: 'movies', component: MovieComponent },
-    { path: 'series', component: SerieComponent },
-    { path: 'movie/:id', component: MediaDetailComponent, data: { type: 'movie' } },
-    { path: 'serie/:id', component: MediaDetailComponent, data: { type: 'serie' } },
-    { path: 'search', component: SearchComponent },
+    { path: 'login', component: LoginComponent },
+    { path: 'movies', component: MovieComponent, canActivate: [authGuard] },
+    { path: 'series', component: SerieComponent, canActivate: [authGuard] },
+    { path: 'movie/:id', component: MediaDetailComponent, canActivate: [authGuard], data: { type: 'movie' } },
+    { path: 'serie/:id', component: MediaDetailComponent, canActivate: [authGuard], data: { type: 'serie' } },
+    { path: 'search', component: SearchComponent, canActivate: [authGuard] },
     { path: '', redirectTo: '/movies', pathMatch: 'full' }
 ];
